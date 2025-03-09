@@ -237,7 +237,7 @@ Mods: {
 				}
 
 				DisableTombstones: {
-					Label: "[i:Fargowiltas/GraveBuster] Отключить надгробия"
+					Label: "[i:321] Отключить надгробия"
 					Tooltip: Пока включена, надгробия не появляются на месте смерти игрока.
 				}
 			}

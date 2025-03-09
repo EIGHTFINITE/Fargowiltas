@@ -1,22 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
-using Fargowiltas.NPCs;
-using Fargowiltas.Items.Ammos.Rockets;
-using System.Text.RegularExpressions;
 using System.Linq;
 using Terraria.GameContent.ItemDropRules;
 using Fargowiltas.Common.Configs;
-using Fargowiltas.Items.Ammos.Coins;
-using Fargowiltas.Items.CaughtNPCs;
-using Terraria.Localization;
-using Fargowiltas.Items.Misc;
-using Fargowiltas.Items.Tiles;
 
 namespace Fargowiltas.Items
 {
@@ -29,263 +18,31 @@ namespace Fargowiltas.Items
 
         public override bool InstancePerEntity => true;
 
-        static string ExpandedTooltipLoc(string line) => Language.GetTextValue($"Mods.Fargowiltas.ExpandedTooltips.{line}");
-
         public override GlobalItem Clone(Item item, Item itemClone)
         {
             return base.Clone(item, itemClone);
         }
 
-        //public override bool CloneNewInstances => true;
-
-        TooltipLine FountainTooltip(string biome) => new TooltipLine(Mod, "Tooltip0", $"[i:909] [c/AAAAAA:{ExpandedTooltipLoc($"Fountain{biome}")}]");
         public override void PickAmmo(Item weapon, Item ammo, Player player, ref int type, ref float speed, ref StatModifier damage, ref float knockback)
         {
             //coin gun is broken as fucking shit codingwise so i'm fixing it
             if (weapon.type == ItemID.CoinGun)
             {
-                if (ammo.type == ItemID.CopperCoin || ammo.type == ModContent.ItemType<CopperCoinBag>())
+                if (ammo.type == ItemID.CopperCoin)
                 {
                     type = ProjectileID.CopperCoin;
                 }
-                if (ammo.type == ItemID.SilverCoin || ammo.type == ModContent.ItemType<SilverCoinBag>())
+                if (ammo.type == ItemID.SilverCoin)
                 {
                     type = ProjectileID.SilverCoin;
                 }
-                if (ammo.type == ItemID.GoldCoin || ammo.type == ModContent.ItemType<GoldCoinBag>())
+                if (ammo.type == ItemID.GoldCoin)
                 {
                     type = ProjectileID.GoldCoin;
                 }
-                if (ammo.type == ItemID.PlatinumCoin || ammo.type == ModContent.ItemType<PlatinumCoinBag>())
+                if (ammo.type == ItemID.PlatinumCoin)
                 {
                     type = ProjectileID.PlatinumCoin;
-                }
-            }
-        }
-        //For the shop sale tooltip system.
-        public class ShopTooltip
-        {
-            public List<int> NpcItemIDs = new();
-            public List<string> NpcNames = new();
-            public string Condition;
-        }
-        public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
-        {
-            var fargoServerConfig = FargoServerConfig.Instance;
-
-            if (FargoClientConfig.Instance.ExpandedTooltips)
-            {
-                TooltipLine line;
-                //Shop sale tooltips. Very engineered. Adds tooltips to ALL npc shop sales. Aims to handle any edge case as well as possible.
-                if (FargoSets.Items.RegisteredShopTooltips[item.type] == null)
-                {
-                    List<ShopTooltip> registeredShopTooltips = [];
-                    foreach (var shop in NPCShopDatabase.AllShops)
-                    {
-                        if (shop.NpcType == ModContent.NPCType<Squirrel>())
-                            continue;
-
-                        foreach (var entry in shop.ActiveEntries.Where(e => !e.Item.IsAir && e.Item.type == item.type))
-                        {
-                            Item npcItem = null;
-                            foreach (var tryNPCItem in ContentSamples.ItemsByType.Where(i => i.Value.ModItem != null && i.Value.ModItem is CaughtNPCItem modItem && modItem.AssociatedNpcId == shop.NpcType))
-                            {
-                                npcItem = tryNPCItem.Value;
-                                break;
-                            }
-
-                            if (npcItem == null)
-                            {
-                                npcItem = item;
-                            }
-
-                            string conditions = "";
-                            int i = 0;
-                            foreach (var condition in entry.Conditions)
-                            {
-                                string grammar = i > 0 ? ", " : "";
-                                conditions += grammar + condition.Description.Value;
-                                i++;
-                            }
-                            string conditionLine = i > 0 ? ": " + conditions : "";
-                            string npcName = ContentSamples.NpcsByNetId[shop.NpcType].FullName;
-
-                            if (registeredShopTooltips.Any(t => t.NpcNames.Any(n => n == npcName) && t.Condition == conditionLine)) //sometimes it makes duplicates otherwise
-                                continue;
-
-                            bool registered = false;
-
-                            foreach (ShopTooltip regTooltip in registeredShopTooltips)
-                            {
-                                if (regTooltip.Condition == conditionLine && !regTooltip.NpcNames.Contains(npcName))
-                                {
-                                    regTooltip.NpcNames.Add(npcName);
-                                    regTooltip.NpcItemIDs.Add(npcItem.type);
-                                    registered = true;
-                                    break;
-                                }
-                            }
-                            if (!registered)
-                            {
-                                ShopTooltip tooltip = new();
-                                tooltip.NpcItemIDs.Add(npcItem.type);
-                                tooltip.NpcNames.Add(npcName);
-                                tooltip.Condition = conditionLine;
-                                registeredShopTooltips.Add(tooltip);
-                            }
-
-                            break; //only one line per npc
-                        }
-                    }
-                    FargoSets.Items.RegisteredShopTooltips[item.type] = registeredShopTooltips;
-                }
-                
-                foreach (ShopTooltip tooltip in FargoSets.Items.RegisteredShopTooltips[item.type])
-                {
-
-                    List<int> displayIDs = tooltip.NpcItemIDs.Where(i => i != item.type)?.ToList();
-                    int id = item.type;
-                    if (displayIDs.Any())
-                    {
-                        int timer = (int)(Main.GlobalTimeWrappedHourly * 60);
-                        int index = timer / 60;
-                        index %= displayIDs.Count;
-                        id = displayIDs[index];
-                    }
-                    
-                    string names = "";
-                    int i = 0;
-                    foreach (string npcName in tooltip.NpcNames)
-                    {
-                        string grammar = i > 0 ? ", " : "";
-                        names += grammar + npcName;
-                        i++;
-                    }
-                    if (i > 5)
-                        names = ExpandedTooltipLoc("SeveralVendors");
-                    string text = $"[i:{id}] [c/AAAAAA:{ExpandedTooltipLoc("SoldBy")} {names}{tooltip.Condition}]";
-                    line = new TooltipLine(Mod, "TooltipNPCSold", text);
-                    tooltips.Add(line);
-                }
-
-                switch (item.type)
-                {
-                    case ItemID.PureWaterFountain:
-                        if (fargoServerConfig.Fountains)
-                            tooltips.Add(FountainTooltip("Ocean"));
-                        break;
-
-                    case ItemID.OasisFountain:
-                    case ItemID.DesertWaterFountain:
-                        if (fargoServerConfig.Fountains)
-                            tooltips.Add(FountainTooltip("Desert"));
-                        break;
-
-                    case ItemID.JungleWaterFountain:
-                        if (fargoServerConfig.Fountains)
-                            tooltips.Add(FountainTooltip("Jungle"));
-                        break;
-
-                    case ItemID.IcyWaterFountain:
-                        if (fargoServerConfig.Fountains)
-                            tooltips.Add(FountainTooltip("Snow"));
-                        break;
-
-                    case ItemID.CorruptWaterFountain:
-                        if (fargoServerConfig.Fountains)
-                            tooltips.Add(FountainTooltip("Corruption"));
-                        break;
-
-                    case ItemID.CrimsonWaterFountain:
-                        if (fargoServerConfig.Fountains)
-                            tooltips.Add(FountainTooltip("Crimson"));
-                        break;
-
-                    case ItemID.HallowedWaterFountain:
-                        if (fargoServerConfig.Fountains)
-                            tooltips.Add(FountainTooltip("Hallow"));
-                        break;
-
-                    //cavern fountain?
-
-                    case ItemID.BugNet:
-                    case ItemID.GoldenBugNet:
-                    case ItemID.FireproofBugNet:
-                        if (fargoServerConfig.CatchNPCs)
-                            tooltips.Add(new TooltipLine(Mod, "Tooltip0", $"[i:1991] [c/AAAAAA:{ExpandedTooltipLoc("CatchNPCs")}]"));
-                        break;
-
-                }
-
-                if (fargoServerConfig.ExtraLures)
-                {
-                    if (item.type == ItemID.FishingPotion)
-                    {
-                        line = new TooltipLine(Mod, "Tooltip1", $"[i:2373] [c/AAAAAA:{ExpandedTooltipLoc("ExtraLure1")}]");
-                        tooltips.Insert(3, line);
-                    }
-
-                    if (item.type == ItemID.FiberglassFishingPole || item.type == ItemID.FisherofSouls || item.type == ItemID.Fleshcatcher || item.type == ItemID.ScarabFishingRod || item.type == ItemID.BloodFishingRod)
-                    {
-                        line = new TooltipLine(Mod, "Tooltip1", $"[i:2373] [c/AAAAAA:{ExpandedTooltipLoc("Lures2")}]");
-                        tooltips.Insert(3, line);
-                    }
-
-                    if (item.type == ItemID.MechanicsRod || item.type == ItemID.SittingDucksFishingRod)
-                    {
-                        line = new TooltipLine(Mod, "Tooltip1", $"[i:2373] [c/AAAAAA:{ExpandedTooltipLoc("Lures3")}]");
-                        tooltips.Insert(3, line);
-                    }
-
-                    if (item.type == ItemID.GoldenFishingRod || item.type == ItemID.HotlineFishingHook)
-                    {
-                        line = new TooltipLine(Mod, "Tooltip1", $"[i:2373] [c/AAAAAA:{ExpandedTooltipLoc("Lures5")}]");
-                        tooltips.Insert(3, line);
-                    }
-                }
-
-                if (fargoServerConfig.TorchGodEX && item.type == ItemID.TorchGodsFavor)
-                {
-                    line = new TooltipLine(Mod, "TooltipTorchGod1", $"[i:5043] [c/AAAAAA:{ExpandedTooltipLoc("AutoTorch")}]");
-                    tooltips.Add(line);
-                    line = new TooltipLine(Mod, "TooltipTorchGod2", $"[i:5043] [c/AAAAAA:{ExpandedTooltipLoc("TrueTorchLuck")}]");
-                    tooltips.Add(line);
-                }
-
-                if (fargoServerConfig.UnlimitedPotionBuffsOn120 && item.maxStack > 1)
-                {
-                    if (!FargoSets.Items.PotionCannotBeInfinite[item.type])
-                    {
-                        if (item.buffType != 0)
-                        {
-                            line = new TooltipLine(Mod, "TooltipUnlim", $"[i:87] [c/AAAAAA:{ExpandedTooltipLoc("UnlimitedBuff30")}]");
-                            tooltips.Add(line);
-                        }
-                        else if (item.bait > 0)
-                        {
-                            line = new TooltipLine(Mod, "TooltipUnlim", $"[i:5139] [c/AAAAAA:{ExpandedTooltipLoc("UnlimitedUse30")}]");
-                            tooltips.Add(line);
-                        }
-                    }
-                }
-
-                if (fargoServerConfig.PermanentStationsNearby && FargoSets.Items.BuffStation[item.type])
-                {
-                    line = new TooltipLine(Mod, "TooltipUnlim", $"[i:{item.type}] [c/AAAAAA:{ExpandedTooltipLoc("PermanentEffectNearby")}]");
-                    tooltips.Add(line);
-                }
-
-                if (fargoServerConfig.PiggyBankAcc && (FargoSets.Items.InfoAccessory[item.type] || FargoSets.Items.MechanicalAccessory[item.type]))
-                {
-                    line = new TooltipLine(Mod, "TooltipUnlim", $"[i:87] [c/AAAAAA:{ExpandedTooltipLoc("WorksFromBanks")}]");
-                    tooltips.Add(line);
-                }
-
-                if (Squirrel.SquirrelSells(item, out SquirrelSellType sellType) != SquirrelShopGroup.End)
-                {
-                    line = new TooltipLine(Mod, "TooltipSquirrel",
-                        $"[i:{CaughtNPCs.CaughtNPCItem.CaughtTownies[NPCType<Squirrel>()]}] [c/AAAAAA:{ExpandedTooltipLoc(sellType.ToString())}]");
-                    tooltips.Add(line);
                 }
             }
         }
@@ -299,33 +56,6 @@ namespace Fargowiltas.Items
                     item.maxStack = 9999;
                 }
             }
-        }
-
-        public override void ModifyItemLoot(Item item, ItemLoot itemLoot)
-        {
-            switch (item.type)
-            {
-                case ItemID.KingSlimeBossBag:
-                    itemLoot.Add(ItemDropRule.Common(ItemID.SlimeStaff, 25));
-                    break;
-
-                case ItemID.WoodenCrate:
-                    
-                    var leadingRule = new LeadingConditionRule(new Conditions.NotRemixSeed());
-                    var dropRuleNormal = ItemDropRule.OneFromOptions(40, ItemID.Spear, ItemID.Blowpipe, ItemID.WoodenBoomerang, ItemID.WandofSparking);
-                    var dropRuleRemix = ItemDropRule.OneFromOptions(40, ItemID.Spear, ItemID.Blowpipe, ItemID.WoodenBoomerang);
-                    leadingRule.OnSuccess(dropRuleNormal);
-                    leadingRule.OnFailedConditions(dropRuleRemix);
-                    itemLoot.Add(leadingRule);
-                    break;
-
-                case ItemID.GoldenCrate:
-                    itemLoot.Add(ItemDropRule.OneFromOptions(10, ItemID.BandofRegeneration, ItemID.MagicMirror, ItemID.CloudinaBottle, ItemID.EnchantedBoomerang, ItemID.ShoeSpikes, ItemID.FlareGun, ItemID.HermesBoots, ItemID.LavaCharm, ItemID.SandstorminaBottle, ItemID.FlyingCarpet));
-                    itemLoot.Add(ItemDropRule.Common(ItemID.Sundial, 20));
-
-                    break;
-            }
-
         }
 
         public override void PostUpdate(Item item)
@@ -428,7 +158,7 @@ namespace Fargowiltas.Items
                     case 6:
                         itemId = 3 + 562;
                         break;
-                        case 7:
+                    case 7:
                         itemId = 6 + 562;
                         break;
                     case 8:
@@ -529,67 +259,9 @@ namespace Fargowiltas.Items
         {
             if (FargoServerConfig.Instance.UnlimitedConsumableWeapons && Main.hardMode && item.damage > 0 && item.ammo == 0 && item.stack >= 3996)
                 return false;
-            if (FargoServerConfig.Instance.UnlimitedPotionBuffsOn120 && ((item.buffType > 0 || FargoSets.Items.NonBuffPotion[item.type]) && (item.stack >= 30 || player.inventory.Any(i => i.type == item.type && !i.IsAir && i.stack >= 30))))
+            if (FargoServerConfig.Instance.UnlimitedPotionBuffsOn120 && (item.buffType > 0 || FargoSets.Items.NonBuffPotion[item.type]) && (item.stack >= 30 || player.inventory.Any(i => i.type == item.type && !i.IsAir && i.stack >= 30)))
                 return false;
             return true;
-        }
-
-        public override bool OnPickup(Item item, Player player)
-        {
-            String dye = "";
-
-            switch (item.type)
-            {
-                case ItemID.RedHusk:
-                    dye = "RedHusk";
-                    break;
-                case ItemID.OrangeBloodroot:
-                    dye = "OrangeBloodroot";
-                    break;
-                case ItemID.YellowMarigold:
-                    dye = "YellowMarigold";
-                    break;
-                case ItemID.LimeKelp:
-                    dye = "LimeKelp";
-                    break;
-                case ItemID.GreenMushroom:
-                    dye = "GreenMushroom";
-                    break;
-                case ItemID.TealMushroom:
-                    dye = "TealMushroom";
-                    break;
-                case ItemID.CyanHusk:
-                    dye = "CyanHusk";
-                    break;
-                case ItemID.SkyBlueFlower:
-                    dye = "SkyBlueFlower";
-                    break;
-                case ItemID.BlueBerries:
-                    dye = "BlueBerries";
-                    break;
-                case ItemID.PurpleMucos:
-                    dye = "PurpleMucos";
-                    break;
-                case ItemID.VioletHusk:
-                    dye = "VioletHusk";
-                    break;
-                case ItemID.PinkPricklyPear:
-                    dye = "PinkPricklyPear";
-                    break;
-                case ItemID.BlackInk:
-                    dye = "BlackInk";
-                    break;
-            }
-
-            if (dye != "")
-            {
-                player.GetModPlayer<FargoPlayer>().FirstDyeIngredients[dye] = true;
-            }
-
-            if (Squirrel.SquirrelSells(item, out SquirrelSellType _) != SquirrelShopGroup.End)
-                player.GetModPlayer<FargoPlayer>().ItemHasBeenOwned[item.type] = true;
-
-            return base.OnPickup(item, player);
         }
 
         public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player)
@@ -609,53 +281,6 @@ namespace Fargowiltas.Items
         public override void HorizontalWingSpeeds(Item item, Player player, ref float speed, ref float acceleration)
         {
             player.GetModPlayer<FargoPlayer>().StatSheetWingSpeed = speed;
-        }
-
-        public override void GrabRange(Item item, Player player, ref int grabRange)
-        {
-            if (player.GetFargoPlayer().bigSuck && !ItemID.Sets.IsAPickup[item.type])
-                grabRange += 9000 * 16; //corner to corner diagonally across a large world is 8736 units
-        }
-
-        public override bool GrabStyle(Item item, Player player)
-        {
-            if (player.GetFargoPlayer().bigSuck && !ItemID.Sets.IsAPickup[item.type])
-            {
-                item.position += (player.MountedCenter - item.Center) / 15f;
-                item.position += player.position - player.oldPosition;
-            }
-            return base.GrabStyle(item, player);
-        }
-        public override void HoldItem(Item item, Player player)
-        {
-            if (item.type == ItemID.Binoculars) //the amount of nesting here exists to prevent excessive lag
-            {
-                if (NPC.AnyNPCs(NPCID.TownCat))
-                {
-                    for (int j = 0; j < Main.maxNPCs; j++)
-                    {
-                        if (Main.npc[j].active && Main.npc[j].type == NPCID.TownCat)
-                        {
-                            NPC cat = Main.npc[j];
-                            for (int i = 0; i < Main.maxItems; i++)
-                            {
-                                if (Main.item[i].active && Main.item[i].type == ItemID.CellPhone)
-                                {
-                                    if (cat.Distance(Main.item[i].Center) < cat.Size.Length() && Main.MouseWorld.Distance(cat.Center) < cat.Size.Length())
-                                    {
-                                        Item.NewItem(player.GetSource_ItemUse(item), cat.Center, ModContent.ItemType<WiresPainting>());
-                                        Main.item[i].active = false;
-                                        cat.active = false;
-                                        return;
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-            base.HoldItem(item, player);
         }
     }
 }

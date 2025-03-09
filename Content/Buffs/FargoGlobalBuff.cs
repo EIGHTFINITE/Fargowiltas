@@ -1,12 +1,8 @@
 using Fargowiltas.Common.Configs;
-using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Fargowiltas.Buffs
@@ -26,14 +22,16 @@ namespace Fargowiltas.Buffs
             // Store actual current buff types and times in temporary arrays, to be restored after draw call.
             // Doing the same operations on buff time is needed for proper buff display.
             int[] buffTypes = (int[])Main.LocalPlayer.buffType.Clone();
-            int[] buffTimes = ((int[])Main.LocalPlayer.buffTime.Clone());
+            int[] buffTimes = (int[])Main.LocalPlayer.buffTime.Clone();
             // Remove all hidden buffs. They'll be readded at the end of the method.
-            for (int i = 0; i < Player.MaxBuffs; i++)
-            {
-                if (FargoClientConfig.Instance.HideUnlimitedBuffs && Main.LocalPlayer.buffType[i] > 0 && BuffCanBeHidden(Main.LocalPlayer, i))
+            if (FargoClientConfig.Instance.HideUnlimitedBuffs) {
+                for (int i = 0; i < Player.MaxBuffs; i++)
                 {
-                    Main.LocalPlayer.buffType[i] = 0;
-                    Main.LocalPlayer.buffTime[i] = 0;
+                    if (Main.LocalPlayer.buffType[i] > 0 && BuffCanBeHidden(Main.LocalPlayer, i))
+                    {
+                        Main.LocalPlayer.buffType[i] = 0;
+                        Main.LocalPlayer.buffTime[i] = 0;
+                    }
                 }
             }
             // Reshuffle array order to have non-hidden buffs first.

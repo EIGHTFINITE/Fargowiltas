@@ -1,15 +1,7 @@
 using Fargowiltas.Common.Configs;
-using Fargowiltas.Items.Tiles;
 using Fargowiltas.NPCs;
-using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
 
 namespace Fargowiltas.Tiles
 {

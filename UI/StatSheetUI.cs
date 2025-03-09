@@ -1,4 +1,3 @@
-﻿using Fargowiltas.Items.Misc;
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
@@ -145,8 +144,6 @@ namespace Fargowiltas.UI
             AddStat("DamageReduction", ItemID.WormScarf, Math.Round(player.endurance * 100), cap);
             AddStat("Luck", ItemID.Torch, Math.Round(player.luck, 2));
             AddStat("FishingQuests", ItemID.AnglerEarring, player.anglerQuestsFinished);
-            AddStat("BattleCry", ModContent.ItemType<BattleCry>(), modPlayer.BattleCry ? $"[c/ff0000:{Language.GetTextValue("Mods.Fargowiltas.Items.BattleCry.Battle")}]" : 
-                modPlayer.CalmingCry ? $"[c/00ffff:{Language.GetTextValue("Mods.Fargowiltas.Items.BattleCry.Calming")}]" : Language.GetTextValue("Mods.Fargowiltas.UI.BattleCryNone"));
             AddStat("MaxSpeed", ItemID.HermesBoots, (int)((player.accRunSpeed + player.maxRunSpeed) / 2f * player.moveSpeed * 3));
 
             string RenderWingStat(double stat) => stat <= 0 ? Language.GetTextValue("Mods.Fargowiltas.UI.WingNull") : stat.ToString();
@@ -174,7 +171,7 @@ namespace Fargowiltas.UI
         public void AddStat(string text, int item = -1)
         {
             int left = 8 + ColumnCounter * ((BackWidth - 8) / HowManyColumns);
-            int top = 8 + LineCounter * (23); // I don't know why but 23 works perfectly
+            int top = 8 + LineCounter * 23; // I don't know why but 23 works perfectly
 
             //this is before linecounter++ to display correctly:
             BackHeight = 25 * (LineCounter + 1) + 26 + 4; //row height * stat rows + search bar + padding
@@ -210,13 +207,5 @@ namespace Fargowiltas.UI
 
             InnerPanel.Append(ui);
         }
-
-        /*public void SetPositionToPoint(Point point)
-        {
-            BackPanel.Left.Set(point.X, 0f);
-            BackPanel.Top.Set(point.Y, 0f);
-        }
-
-        public Point GetPositinAsPoint() => new Point((int)BackPanel.Left.Pixels, (int)BackPanel.Top.Pixels);*/
     }
 }

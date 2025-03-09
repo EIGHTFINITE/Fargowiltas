@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.Serialization;
 using Terraria;
-using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
 namespace Fargowiltas.Common.Configs
@@ -14,9 +13,6 @@ namespace Fargowiltas.Common.Configs
             Instance = this;
         }
         public override ConfigScope Mode => ConfigScope.ClientSide;
-
-        [DefaultValue(true)]
-        public bool ExpandedTooltips;
 
         [DefaultValue(false)]
         public bool HideUnlimitedBuffs;
@@ -42,7 +38,6 @@ namespace Fargowiltas.Common.Configs
         [Slider]
         public float DebuffFaderRatio;
         
-
         [OnDeserialized]
         internal void OnDeserializedMethod(StreamingContext context)
         {

@@ -1,8 +1,5 @@
 ﻿using System.ComponentModel;
-using System.Runtime.Serialization;
-using Terraria;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
 namespace Fargowiltas.Common.Configs
@@ -19,27 +16,6 @@ namespace Fargowiltas.Common.Configs
         public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message) => false;
 
         [Header("$Mods.Fargowiltas.Configs.FargoServerConfig.Headers.TownNPCs")]
-        [DefaultValue(true)]
-        public bool Mutant;
-
-        [DefaultValue(true)]
-        public bool Abom;
-
-        [DefaultValue(true)]
-        public bool Devi;
-
-        [DefaultValue(true)]
-        public bool Lumber;
-
-        [DefaultValue(true)]
-        public bool Squirrel;
-
-        [DefaultValue(true)]
-        [ReloadRequired]
-        public bool CatchNPCs;
-
-        [DefaultValue(true)]
-        public bool NPCSales;
 
         [DefaultValue(true)]
         public bool SaferBoundNPCs;
@@ -84,8 +60,6 @@ namespace Fargowiltas.Common.Configs
         [DefaultValue(true)]
         public bool UnlimitedPotionBuffsOn120;
 
-        private const uint maxExtraBuffSlots = 99;
-
         [Header("$Mods.Fargowiltas.Configs.FargoServerConfig.Headers.StatMultipliers")]
 
         [Range(1f, 10f)]
@@ -113,11 +87,6 @@ namespace Fargowiltas.Common.Configs
 
         [Header("$Mods.Fargowiltas.Configs.FargoServerConfig.Headers.Misc")]
 
-        [Range(0, maxExtraBuffSlots)]
-        [DefaultValue(22)]
-        [ReloadRequired]
-        public uint ExtraBuffSlots;
-
         [DefaultValue(true)]
         public bool AnglerQuestInstantReset;
 
@@ -129,10 +98,6 @@ namespace Fargowiltas.Common.Configs
 
         [DefaultValue(true)]
         public bool RottenEggs;
-
-        [DefaultValue(true)]
-        [ReloadRequired]
-        public bool BannerRecipes;
 
         [DefaultValue(true)]
         public bool IncreaseMaxStack;
@@ -165,15 +130,6 @@ namespace Fargowiltas.Common.Configs
         public bool PylonsIgnoreEvents;
 
         [DefaultValue(false)]
-        public bool SafeTerraformers;
-
-        [DefaultValue(false)]
         public bool DisableTombstones;
-
-        [OnDeserialized]
-        internal void OnDeserializedMethod(StreamingContext context)
-        {
-            ExtraBuffSlots = Utils.Clamp<uint>(ExtraBuffSlots, 0, maxExtraBuffSlots);
-        }
     }
 }

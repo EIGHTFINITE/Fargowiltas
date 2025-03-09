@@ -8,12 +8,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.ModLoader.IO;
-using static Terraria.ModLoader.ModContent;
-using Fargowiltas.Items.Tiles;
-using System;
 using Terraria.GameContent.Events;
 using Fargowiltas.Common.Configs;
-using Fargowiltas.Projectiles;
 
 namespace Fargowiltas
 {
@@ -150,7 +146,6 @@ namespace Fargowiltas
 
         public override void OnWorldUnload()
         {
-            FargoGlobalProjectile.CannotDestroyRectangle.Clear();
             ResetFlags();
         }
 
@@ -166,8 +161,6 @@ namespace Fargowiltas
 
             tag.Add("downed", downed);
             tag.Add("matsuri", Matsuri);
-
-            tag.Add("FargoIndestructibleRectangles", FargoGlobalProjectile.CannotDestroyRectangle.ToList());
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -178,10 +171,6 @@ namespace Fargowiltas
                 DownedBools[downedTag] = downed.Contains(downedTag);
             }
             Matsuri = tag.Get<bool>("matsuri");
-
-            var savedRectangles = tag.GetList<Rectangle>("FargoIndestructibleRectangles");
-            foreach (Rectangle rectangle in savedRectangles)
-                FargoGlobalProjectile.CannotDestroyRectangle.Add(rectangle);
         }
 
         public override void NetReceive(BinaryReader reader)
@@ -285,21 +274,6 @@ namespace Fargowiltas
             }
         }
 
-        public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
-        {
-            ref bool current = ref CurrentSpawnRateTile[0];
-            bool oldSpawnRateTile = current;
-            current = tileCounts[ModContent.TileType<RegalStatueSheet>()] > 0;
-
-            if (Main.netMode == NetmodeID.MultiplayerClient && current != oldSpawnRateTile)
-            {
-                ModPacket packet = Fargowiltas.Instance.GetPacket();
-                packet.Write((byte)1);
-                packet.Write(current);
-                packet.Send();
-            }
-        }
-
         public override void PreUpdateWorld()
         {
             bool rate = false;
@@ -340,11 +314,6 @@ namespace Fargowiltas
         {
             base.ModifyInterfaceLayers(layers);
             Fargowiltas.UserInterfaceManager.ModifyInterfaceLayers(layers);
-        }
-
-        public override void AddRecipes()
-        {
-            Fargowiltas.summonTracker.FinalizeSummonData();
         }
     }
 }
