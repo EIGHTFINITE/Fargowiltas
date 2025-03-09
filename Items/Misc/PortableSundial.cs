@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -54,7 +55,7 @@ namespace Fargowiltas.Items.Misc
             return !Main.IsFastForwardingTime();
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (player.altFunctionUse == ItemAlternativeFunctionID.ActivatedAndUsed)
             {

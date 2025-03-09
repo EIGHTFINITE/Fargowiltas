@@ -95,7 +95,7 @@ namespace Fargowiltas.NPCs
             });
         }
 
-        public override List<string> SetNPCNameList()
+        public override List<string> SetNPCNameList()/* tModPorter Suggestion: Return a list of names */
         {
             return new List<string> { "Rick", "Acorn", "Puff", "Coco", "Truffle", "Furgo", "Squeaks" };
         }

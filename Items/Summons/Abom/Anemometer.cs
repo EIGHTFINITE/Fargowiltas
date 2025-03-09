@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -33,7 +34,7 @@ namespace Fargowiltas.Items.Summons.Abom
             return Main.windSpeedTarget <= 0.8f; //wind threshold
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             Main.windSpeedTarget = Main.windSpeedCurrent = 0.8f; //40mph?
 

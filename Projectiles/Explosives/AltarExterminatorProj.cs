@@ -25,7 +25,7 @@ namespace Fargowiltas.Projectiles.Explosives
             Projectile.timeLeft = 1;
         }
 
-        public override bool? CanDamage() => false;
+        public override Nullable<bool> CanDamage()/* tModPorter Suggestion: Return null instead of true */ => false;
 
         public override void OnKill(int timeLeft)
         {

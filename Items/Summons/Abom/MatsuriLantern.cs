@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -36,7 +37,7 @@ namespace Fargowiltas.Items.Summons.Abom
 
         public override bool CanUseItem(Player player) => !FargoWorld.Matsuri;
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             FargoWorld.Matsuri = true;
             FargoUtils.PrintLocalization("MessageInfo.StartLanternNight", new Color(175, 75, 255));

@@ -1,4 +1,5 @@
 using Fargowiltas.Content.Buffs;
+using System;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -29,7 +30,7 @@ namespace Fargowiltas.Items.Misc
 			Item.value = Item.buyPrice(silver: 10);
 		}
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
 			player.AddBuff(ModContent.BuffType<BigSuckBuff>(), 180);
             return true;

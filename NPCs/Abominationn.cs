@@ -130,7 +130,7 @@ namespace Fargowiltas.NPCs
             }
         }
 
-        public override List<string> SetNPCNameList()
+        public override List<string> SetNPCNameList()/* tModPorter Suggestion: Return a list of names */
         {
             string[] names = ["Wilta", "Jack", "Harley", "Reaper", "Stevenn", "Doof", "Baroo", "Fergus", "Entev", "Catastrophe", "Bardo", "Betson"];
 

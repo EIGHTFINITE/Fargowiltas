@@ -1,6 +1,7 @@
 ﻿using Fargowiltas.Common.Configs;
 using Fargowiltas.NPCs;
 using Fargowiltas.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -96,7 +97,7 @@ namespace Fargowiltas.Items.CaughtNPCs
                 && NPC.CountNPCS(AssociatedNpcId) < 5;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             return true;
         }

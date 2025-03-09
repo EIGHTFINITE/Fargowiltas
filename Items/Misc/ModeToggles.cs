@@ -2,6 +2,7 @@ using Fargowiltas.Projectiles;
 using Fargowiltas.Projectiles.Explosives;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Chat;
@@ -50,7 +51,7 @@ namespace Fargowiltas.Items.Misc
             return true;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             string text; ;
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Chat;
@@ -34,7 +35,7 @@ namespace Fargowiltas.Items.Summons.SwarmSummons
             return FargoUtils.ActuallyNight;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (FargoWorld.OverloadFrostMoon)
             {

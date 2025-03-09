@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Reflection;
 using Terraria;
 using Terraria.Audio;
@@ -37,7 +38,7 @@ namespace Fargowiltas.Items.Summons.Abom
             return !Sandstorm.Happening;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             Sandstorm.StartSandstorm();
 

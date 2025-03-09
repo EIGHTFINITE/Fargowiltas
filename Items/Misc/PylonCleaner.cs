@@ -1,5 +1,6 @@
 using Fargowiltas.Projectiles;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -32,7 +33,7 @@ namespace Fargowiltas.Items.Misc
 			Item.useTime = 20;
 		}
 
-		public override bool? UseItem(Player player)
+		public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
 		{
 			if (player.itemAnimation > 0 && player.itemTime == 0 && player.whoAmI == Main.myPlayer)
 			{

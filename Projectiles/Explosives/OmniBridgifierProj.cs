@@ -1,6 +1,7 @@
 ﻿using Fargowiltas.Items.Tiles;
 using Fargowiltas.Tiles;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -29,7 +30,7 @@ namespace Fargowiltas.Projectiles.Explosives
             Projectile.timeLeft = 1;
         }
 
-        public override bool? CanDamage()
+        public override Nullable<bool> CanDamage()/* tModPorter Suggestion: Return null instead of true */
         {
             return false;
         }

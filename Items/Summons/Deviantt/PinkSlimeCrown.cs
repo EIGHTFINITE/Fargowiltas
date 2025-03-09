@@ -1,5 +1,6 @@
 using Fargowiltas.Projectiles;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Chat;
@@ -36,7 +37,7 @@ namespace Fargowiltas.Items.Summons.Deviantt
             Item.consumable = true;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             int n = NPC.NewNPC(NPC.GetBossSpawnSource(player.whoAmI), (int)player.position.X + Main.rand.Next(-800, 800), (int)player.position.Y + Main.rand.Next(-800, -250), NPCID.BlueSlime);
             Main.npc[n].SetDefaults(NPCID.Pinky);

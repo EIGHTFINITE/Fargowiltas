@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -20,7 +21,7 @@ namespace Fargowiltas.Items.Summons.VanillaCopy
 
         public override bool CanUseItem(Player player) => !NPC.AnyNPCs(NPCType);
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             FargoUtils.SpawnBossNetcoded(player, NPCType);
             return true;

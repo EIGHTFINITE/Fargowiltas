@@ -155,7 +155,7 @@ namespace Fargowiltas.NPCs
             return FargoServerConfig.Instance.Mutant && FargoWorld.DownedBools["boss"] && !FargoGlobalNPC.AnyBossAlive();
         }
 
-        public override List<string> SetNPCNameList()
+        public override List<string> SetNPCNameList()/* tModPorter Suggestion: Return a list of names */
         {
             string[] names = ["Flacken", "Dorf", "Bingo", "Hans", "Fargo", "Grim", "Mike", "Fargu", "Terrance", "Catty N. Pem", "Tom", "Weirdus", "Polly"];
 

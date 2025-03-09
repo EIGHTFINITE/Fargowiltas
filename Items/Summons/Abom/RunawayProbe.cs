@@ -1,3 +1,4 @@
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -27,7 +28,7 @@ namespace Fargowiltas.Items.Summons.Abom
             Item.consumable = true;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             Main.StartInvasion(InvasionID.MartianMadness);
             SoundEngine.PlaySound(SoundID.Roar, player.position);

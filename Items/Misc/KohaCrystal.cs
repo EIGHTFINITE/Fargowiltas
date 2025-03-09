@@ -47,7 +47,7 @@ namespace Fargowiltas.Items.Misc
                 Item.UseSound = SoundID.Item27;
             }
         }
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
 		{
 			if (player.ConsumedManaCrystals > 0)
 			{

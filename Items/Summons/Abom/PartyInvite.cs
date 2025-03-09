@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -35,7 +36,7 @@ namespace Fargowiltas.Items.Summons.Abom
             return (Main.dayTime || Main.remixWorld) && !BirthdayParty.PartyIsUp && Main.npc.Count(n => n.active && n.townNPC && n.aiStyle != 0 && n.type != NPCID.OldMan && n.type != NPCID.SkeletonMerchant && n.type != NPCID.TaxCollector && !NPCID.Sets.IsTownPet[n.type]) >= 5;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (!NPC.AnyNPCs(NPCID.PartyGirl))
                 NPC.SpawnOnPlayer(player.whoAmI, NPCID.PartyGirl);

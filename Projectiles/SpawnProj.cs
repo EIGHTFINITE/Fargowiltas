@@ -1,4 +1,5 @@
 using Fargowiltas.NPCs;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -25,7 +26,7 @@ namespace Fargowiltas.Projectiles
             Projectile.hide = true;
         }
 
-        public override bool? CanDamage()
+        public override Nullable<bool> CanDamage()/* tModPorter Suggestion: Return null instead of true */
         {
             return false;
         }

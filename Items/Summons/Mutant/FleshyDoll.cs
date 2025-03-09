@@ -1,3 +1,4 @@
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -32,7 +33,7 @@ namespace Fargowiltas.Items.Summons.Mutant
             return player.position.Y / 16 > Main.maxTilesY - 200 && !NPC.AnyNPCs(NPCID.WallofFlesh);
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             NPC.SpawnWOF(player.Center);
             SoundEngine.PlaySound(SoundID.Roar, player.position);
