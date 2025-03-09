@@ -1,16 +1,7 @@
-﻿using Fargowiltas.Items.Misc;
-using Fargowiltas.Items.Tiles;
-using Fargowiltas.NPCs;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Fargowiltas.Items.FargoGlobalItem;
-using static Terraria.ModLoader.ModContent;
 
 namespace Fargowiltas
 {
@@ -25,7 +16,6 @@ namespace Fargowiltas
             public static bool[] NonBuffPotion;
             public static bool[] PotionCannotBeInfinite;
             public static bool[] BuffStation;
-            public static List<ShopTooltip>[] RegisteredShopTooltips;
         }
         public class Tiles
         {
@@ -105,21 +95,13 @@ namespace Fargowiltas
                 ItemID.TerrasparkBoots,
                 ItemID.TorchGodsFavor,
                 ItemID.HandOfCreation,
-                ItemID.Zenith,
-                ItemType<Omnistation>(),
-                ItemType<Omnistation2>(),
-                ItemType<CrucibleCosmos>(),
-                ItemType<ElementalAssembler>(),
-                ItemType<MultitaskCenter>(),
-                ItemType<PortableSundial>(),
-                ItemType<BattleCry>());
+                ItemID.Zenith);
 
             Items.NonBuffPotion = itemFactory.CreateBoolSet(false,
                 ItemID.RecallPotion,
                 ItemID.PotionOfReturn,
                 ItemID.WormholePotion,
-                ItemID.TeleportationPotion,
-                ItemType<BigSuckPotion>());
+                ItemID.TeleportationPotion);
 
             Items.PotionCannotBeInfinite = itemFactory.CreateBoolSet(false,
                 ItemID.BottledHoney);
@@ -130,8 +112,6 @@ namespace Fargowiltas
                 ItemID.CrystalBall,
                 ItemID.BewitchingTable,
                 ItemID.WarTable);
-
-            Items.RegisteredShopTooltips = itemFactory.CreateCustomSet<List<ShopTooltip>>(null);
             #endregion
             #region Tiles
             SetFactory tileFactory = TileID.Sets.Factory;

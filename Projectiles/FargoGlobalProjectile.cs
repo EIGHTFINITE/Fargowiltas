@@ -1,7 +1,6 @@
 using Fargowiltas.Common.Configs;
 using Fargowiltas.NPCs;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -9,7 +8,6 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
-using static Terraria.ModLoader.ModContent;
 
 namespace Fargowiltas.Projectiles
 {
@@ -25,25 +23,6 @@ namespace Fargowiltas.Projectiles
 
         public override void SetDefaults(Projectile projectile)
         {
-            //if (projectile.CountsAsClass(DamageClass.Summon) || projectile.minion || projectile.sentry || projectile.minionSlots > 0 || ProjectileID.Sets.MinionShot[projectile.type] || ProjectileID.Sets.SentryShot[projectile.type])
-            //{
-            //    if (!ProjectileID.Sets.IsAWhip[projectile.type])
-            //        lowRender = true;
-            //}
-
-            //switch (projectile.type)
-            //{
-            //    case ProjectileID.FlowerPetal:
-            //    case ProjectileID.HallowStar:
-            //    case ProjectileID.RainbowFront:
-            //    case ProjectileID.RainbowBack:
-            //        lowRender = true;
-            //        break;
-
-            //    default:
-            //        break;
-            //}
-
             if (projectile.friendly)
                 lowRender = true;
         }
@@ -254,8 +233,6 @@ namespace Fargowiltas.Projectiles
                 }
             }
             Rectangle area = new(x, y, 3, 3);
-            if (!FargoServerConfig.Instance.SafeTerraformers)
-                bypassVanillaCanPlace = true;
             if (!bypassVanillaCanPlace && GenVars.structures != null && !GenVars.structures.CanPlace(area))
             {
                 return false;
@@ -266,7 +243,7 @@ namespace Fargowiltas.Projectiles
 
         public static bool TileIsLiterallyAir(Tile tile)
         {
-            return tile.TileType == 0 && tile.WallType == 0 && tile.LiquidAmount == 0 /*&& tile.sTileHeader == 0 && tile.bTileHeader == 0 && tile.bTileHeader2 == 0 && tile.bTileHeader3 == 0*/ && tile.TileFrameX == 0 && tile.TileFrameY == 0;
+            return tile.TileType == 0 && tile.WallType == 0 && tile.LiquidAmount == 0 && tile.TileFrameX == 0 && tile.TileFrameY == 0;
         }
 
         public static bool TileBelongsToMagicStorage(Tile tile)

@@ -11,9 +11,6 @@ namespace Fargowiltas
 {
     public static class FargoNet
     {
-        public const byte SummonNPCFromClient = 0;
-        private const bool Debug = false;
-
         public static void SendData(int dataType, int dataA, int dataB, string text, int playerID, float dataC, float dataD, float dataE, int clientType)
         {
             NetMessage.SendData(dataType, dataA, dataB, NetworkText.FromLiteral(text), playerID, dataC, dataD, dataE, clientType);
@@ -153,59 +150,6 @@ namespace Fargowiltas
             }
 
             WriteToPacket(ModContent.GetInstance<Fargowiltas>().GetPacket(), (byte)msg, param).Send();
-        }
-
-        public static void HandlePacket(BinaryReader bb, byte msg)
-        {
-            if (Debug)
-            {
-                ModContent.GetInstance<Fargowiltas>().Logger.Error((Main.netMode == NetmodeID.Server ? "--SERVER-- " : "--CLIENT-- ") + "HANDLING MESSAGE: " + msg);
-            }
-
-            try
-            {
-                if (msg == SummonNPCFromClient)
-                {
-                    int playerID = bb.ReadByte();
-                    int bossType = bb.ReadInt16();
-                    bool spawnMessage = bb.ReadBoolean();
-                    int npcCenterX = bb.ReadInt32();
-                    int npcCenterY = bb.ReadInt32();
-                    string overrideDisplayName = bb.ReadString();
-                    bool namePlural = bb.ReadBoolean();
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        Fargowiltas.SpawnBoss(Main.player[playerID], bossType, spawnMessage, new Vector2(npcCenterX, npcCenterY), overrideDisplayName, namePlural);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                ModContent.GetInstance<Fargowiltas>().Logger.Error((Main.netMode == NetmodeID.Server ? "--SERVER-- " : "--CLIENT-- ") + "ERROR HANDLING MSG: " + msg.ToString() + ": " + e.Message);
-                ModContent.GetInstance<Fargowiltas>().Logger.Error(e.StackTrace);
-                ModContent.GetInstance<Fargowiltas>().Logger.Error("-------");
-            }
-        }
-
-        public static void SyncPlayer(int toWho, int fromWho, bool newPlayer)
-        {
-            if (Debug)
-            {
-                ModContent.GetInstance<Fargowiltas>().Logger.Error((Main.netMode == NetmodeID.Server ? "--SERVER-- " : "--CLIENT-- ") + "SYNC PLAYER CALLED! NEWPLAYER: " + newPlayer + ". TOWHO: " + toWho + ". FROMWHO:" + fromWho);
-            }
-
-            if (Main.netMode == NetmodeID.Server && (toWho > -1 || fromWho > -1))
-            {
-                PlayerConnected();
-            }
-        }
-
-        public static void PlayerConnected()
-        {
-            if (Debug)
-            {
-                ModContent.GetInstance<Fargowiltas>().Logger.Info("--SERVER-- PLAYER JOINED!");
-            }
         }
 
         public static void SendNetMessage(int msg, params object[] param)

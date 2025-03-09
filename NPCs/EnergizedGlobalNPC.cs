@@ -1,24 +1,7 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Fargowiltas.Buffs;
-using Fargowiltas.Items.Summons.SwarmSummons.Energizers;
-using Fargowiltas.Items.Tiles;
-////using Fargowiltas.Items.Vanity;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.Chat;
-using Terraria.GameContent.Events;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
-using Fargowiltas.Items.Explosives;
-using Fargowiltas.Items.Summons.Abom;
-using Fargowiltas.Common.Configs;
-using Fargowiltas.Items.Summons.Deviantt;
 
 namespace Fargowiltas.NPCs
 {
@@ -30,7 +13,6 @@ namespace Fargowiltas.NPCs
         internal static int[] Bosses = [ 
             NPCID.KingSlime,
             NPCID.EyeofCthulhu,
-            //NPCID.EaterofWorldsHead,
             NPCID.BrainofCthulhu,
             NPCID.QueenBee,
             NPCID.SkeletronHead,
@@ -63,7 +45,6 @@ namespace Fargowiltas.NPCs
         public override void SetDefaults(NPC npc)
         {
             const int k = 1000;
-            const int m = k * k;
             int baseHealth = 28 * k;
             int baseHealthHM = 275 * k;
             bool validBoss = true;

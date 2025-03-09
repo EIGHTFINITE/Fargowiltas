@@ -9,7 +9,6 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI.Chat;
 
 namespace Fargowiltas
 {
@@ -63,7 +62,7 @@ namespace Fargowiltas
                 {
                     int debuffID = debuffs[j + i];
 
-                    Vector2 drawPos = (player.gravDir > 0 ? player.Top : player.Bottom);
+                    Vector2 drawPos = player.gravDir > 0 ? player.Top : player.Bottom;
                     drawPos.Y -= (32f + yOffset) * player.gravDir;
                     drawPos.X += 32f * (i - midpoint);
 
@@ -138,20 +137,6 @@ namespace Fargowiltas
                         buffIcon, drawPos, buffIcon.Bounds, buffColor,
                         rotation, buffIcon.Bounds.Size() / 2,
                         1f, effects, 0));
-
-                    //if (ModContent.GetInstance<FargoConfig>().DebuffCountdown)
-                    //{
-                    //    Vector2 textPos = drawPos;
-                    //    ChatManager.DrawColorCodedStringWithShadow(
-                    //        Main.spriteBatch, 
-                    //        FontAssets.ItemStack.Value, 
-                    //        Math.Round(currentDuration / 60.0, MidpointRounding.AwayFromZero).ToString(), 
-                    //        textPos,
-                    //        Color.White, 
-                    //        0f,
-                    //        Vector2.Zero,
-                    //        Vector2.One);
-                    //}
                 }
                 yOffset += (int)(32 * player.gravDir);
             }

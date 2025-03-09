@@ -237,7 +237,7 @@ Mods: {
 				}
 
 				DisableTombstones: {
-					Label: "[i:Fargowiltas/GraveBuster] Disable Tombstones"
+					Label: "[i:321] Disable Tombstones"
 					Tooltip: Makes Tombstones not spawn when players die.
 				}
 			}

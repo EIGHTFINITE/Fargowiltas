@@ -1,7 +1,5 @@
 using Fargowiltas.Common.Configs;
-using Fargowiltas.Items.Tiles;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -23,12 +21,6 @@ namespace Fargowiltas.Tiles
                 return adjTiles;
             }
 
-            //if (type == ModContent.TileType<CrucibleCosmosSheet>())
-            //{
-            //    Main.LocalPlayer.adjHoney = true;
-            //    Main.LocalPlayer.adjLava = true;
-            //}
-
             return base.AdjTiles(type);
         }
 
@@ -37,31 +29,6 @@ namespace Fargowiltas.Tiles
             if (type == TileID.Extractinator || type == TileID.ChlorophyteExtractinator)
             {
                 Main.player[Main.myPlayer].GetModPlayer<FargoPlayer>().extractSpeed = true;
-            }
-        }
-
-        public override void KillTile(int i, int j, int type, ref bool fail, ref bool effectOnly, ref bool noItem)
-        {
-            if (WorldGen.gen)
-            {
-                return;
-            }
-
-            if (type == TileID.Trees || type == TileID.TreeAsh && !fail && !(FargoWorld.DownedBools.TryGetValue("lumberjack", out bool down) && down))
-            {
-                FargoWorld.WoodChopped++;
-
-                /*
-                if (FargoWorld.WoodChopped > 500)
-                {
-                    FargoWorld.DownedBools["lumberjack"] = true;
-                }
-                */
-            }
-
-            if (type == TileID.GardenGnome && !fail)
-            {
-                FargoUtils.TryDowned("Deviantt", Color.HotPink, "rareEnemy", "gnome");
             }
         }
 
@@ -220,7 +187,6 @@ namespace Fargowiltas.Tiles
                 for (int j = y; j < y + 2; j++)
                 {
                     Main.tile[i, j].TileType = 0;
-                    //Main.tile[i, j].sTileHeader = 0;
                     Main.tile[i, j].TileFrameX = 0;
                     Main.tile[i, j].TileFrameY = 0;
                 }

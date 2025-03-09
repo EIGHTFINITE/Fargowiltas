@@ -245,7 +245,7 @@ Mods: {
 				}
 
 				DisableTombstones: {
-					Label: "[i:Fargowiltas/GraveBuster] 禁止墓碑生成"
+					Label: "[i:321] 禁止墓碑生成"
 					Tooltip: 玩家死亡后不再生成墓碑
 				}
 			}
